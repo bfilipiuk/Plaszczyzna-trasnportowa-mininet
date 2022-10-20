@@ -67,5 +67,68 @@ print(delay_frankfurtstuttgart)
 print(delay_berlinkolonia)
 
 
-def treeNet(net):
-    "Create custom topo."
+def treeNet():
+    'Create custom topo.'
+
+    topo = Mininet(controller=None, link=TCLink)
+
+    topo.addController('controller1', controller=RemoteController, ip='127.0.0.1', port=6654)
+
+    host_berlin = topo.addHost('host_berlin', ip='192.168.68.100')
+    host_hamburg = topo.addHost('host_hamburg', ip='192.168.68.101')
+    host_monachium = topo.addHost('host_monachium', ip='192.168.68.102')
+    host_kolonia = topo.addHost('host_kolonia', ip='192.168.68.103')
+    host_frankfurt = topo.addHost('host_frankfurt', ip='192.168.68.104')
+    host_stuttgart = topo.addHost('host_stuttgart', ip='192.168.68.105')
+    host_dusseldorf = topo.addHost('host_dusseldorf', ip='192.168.68.106')
+    host_dortmund = topo.addHost('host_dortmund', ip='192.168.68.107')
+    host_essen = topo.addHost('host_essen', ip='192.168.68.108')
+    host_lipsk = topo.addHost('host_lipsk', ip='192.168.68.109')
+
+    switch_berlin = topo.addSwitch('switch_berlin')
+    switch_hamburg = topo.addSwitch('switch_hamburg')
+    switch_monachium = topo.addSwitch('switch_monachium')
+    switch_kolonia = topo.addSwitch('switch_kolonia')
+    switch_frankfurt = topo.addSwitch('switch_frankfurt')
+    switch_stuttgart = topo.addSwitch('switch_stuttgart')
+    switch_dusseldorf = topo.addSwitch('switch_dusseldorf')
+    switch_dortmund = topo.addSwitch('switch_dortmund')
+    switch_essen = topo.addSwitch('switch_essen')
+    switch_lipsk = topo.addSwitch('switch_lipsk')
+
+    topo.addLink(host_berlin, switch_berlin, bw=100, delay='0.01ms')
+    topo.addLink(host_hamburg, switch_hamburg, bw=100, delay='0.01ms')
+    topo.addLink(host_monachium, switch_monachium, bw=100, delay='0.01ms')
+    topo.addLink(host_kolonia, switch_kolonia, bw=100, delay='0.01ms')
+    topo.addLink(host_frankfurt, switch_frankfurt, bw=100, delay='0.01ms')
+    topo.addLink(host_stuttgart, switch_stuttgart, bw=100, delay='0.01ms')
+    topo.addLink(host_dusseldorf, switch_dusseldorf, bw=100, delay='0.01ms')
+    topo.addLink(host_dortmund, switch_dortmund, bw=100, delay='0.01ms')
+    topo.addLink(host_essen, switch_essen, bw=100, delay='0.01ms')
+    topo.addLink(host_lipsk, switch_lipsk, bw=100, delay='0.01ms')
+
+    topo.addLink(switch_berlin, switch_hamburg, bw=100, delay=delay_berlinhamburg)
+    topo.addLink(switch_berlin, switch_kolonia, bw=100, delay=delay_berlinkolonia)
+    topo.addLink(switch_berlin, switch_frankfurt, bw=100, delay=delay_berlinfrankfurt)
+    topo.addLink(switch_berlin, switch_lipsk, bw=100, delay=delay_berlinlipsk)
+    topo.addLink(switch_berlin, switch_monachium, bw=100, delay=delay_berlinmonachium)
+
+    topo.addLink(switch_kolonia, switch_essen, bw=100, delay=delay_koloniaessen)
+    topo.addLink(switch_kolonia, switch_dusseldorf, bw=100, delay=delay_koloniadusseldorf)
+    topo.addLink(switch_kolonia, switch_dortmund, bw=100, delay=delay_koloniadortmund)
+
+    topo.addLink(switch_frankfurt, switch_stuttgart, bw=100, delay=delay_frankfurtstuttgart)
+
+    topo.start()
+
+    dumpNodeConnections(topo.hosts)
+
+    topo.pingAll()
+
+    CLI(topo)
+
+    topo.stop()
+
+
+if __name__ == '__main__':
+    treeNet()
